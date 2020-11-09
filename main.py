@@ -11,13 +11,13 @@ def main():
     c = conn.cursor() # Creating the cursor to manipulate the database
 
     # Creating the database if it doesnt exist
-    c.execute("CREATE TABLE IF NOT EXISTS usernameAndPasswords(username TEXT, password TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS usernameAndPasswords(username TEXT, password TEXT, email TEXT, question1 TEXT, question2 TEXT)")
 
     print("Welcome to my first login system.\n")
     print("===== Please make a selection =====")
     print("1) Login")
     print("2) Create an account")
-    print("3) Change password")
+    print("3) Forgot password")
     print("4) Delete account\n")
     user_selection = str(input("Your selection: "))
 
@@ -33,8 +33,13 @@ def main():
     if user_selection == "1":
         
         # Getting the user input
-        username = input("Username: ")
+        username = input("Username: ").lower()
         password = stdiomask.getpass("Password: ")
+        email = input("Email: ")
+        print("Security question 1:\n")
+        question1 = input("What is your mother's madien name? ")
+        print("Security question 2:\n")
+        question2 = input("What city were you born? ")
 
         # Getting the table based on the user name entered
         c.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{username}"')
@@ -53,7 +58,7 @@ def main():
             print("You are logged in!")
 
         else:
-            print("Something is wrong with the credentials.")
+            print("Username or password is not correct.")
 
         c.close()
         conn.close()
@@ -61,12 +66,16 @@ def main():
     # If user enters "2" create a new account, get info and write to a file
     elif user_selection == "2":
 
-        new_username = input("Please enter a new username: ")
+        new_username = input("Please enter a new username: ").lower()
         new_password = stdiomask.getpass("Please enter a new password: ")
 
-        c.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}")')
-        print() # Empty print statment for spacing
-        print("Saving user name and password to the database.")
+        if c.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{new_username}"'):
+            print("Username already exists, please login or choose forgot password.")
+        else:
+            c.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}")')
+            print() # Empty print statment for spacing
+            print("Saving user name and password to the database.")
+        
         conn.commit()
         c.close()
         conn.close()
