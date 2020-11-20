@@ -36,3 +36,5 @@ print ("Opened database successfully")
 
 
 # SELECT Operation =======================================
+
+# https://www.tutorialspoint.com/sqlite/sqlite_python.htm
