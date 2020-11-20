@@ -17,8 +17,8 @@ def main():
     print("===== Please make a selection =====")
     print("1) Login")
     print("2) Create an account")
-    print("3) Forgot password")
-    print("4) Delete account\n")
+    print("3) Forgot password (N/A)")
+    print("4) Delete account (N/A)\n")
     user_selection = str(input("Your selection: "))
 
     # Input validation 
@@ -35,11 +35,6 @@ def main():
         # Getting the user input
         username = input("Username: ").lower()
         password = stdiomask.getpass("Password: ")
-        email = input("Email: ")
-        print("Security question 1:\n")
-        question1 = input("What is your mother's madien name? ")
-        print("Security question 2:\n")
-        question2 = input("What city were you born? ")
 
         # Getting the table based on the user name entered
         c.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{username}"')
@@ -67,14 +62,31 @@ def main():
     elif user_selection == "2":
 
         new_username = input("Please enter a new username: ").lower()
-        new_password = stdiomask.getpass("Please enter a new password: ")
 
-        if c.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{new_username}"'):
-            print("Username already exists, please login or choose forgot password.")
-        else:
-            c.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}")')
+        try:
+            c.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{new_username}"')
+            test_username = c.fetchone() # Getting the results of the cursor and assigning it to a variable
+            test_username = ''.join(test_username) # converting the results from a tuple to a string
+            if new_username == test_username:
+                print("Username already exists, please login or choose forgot password.")
+        except TypeError:
+            while True:
+                new_password = stdiomask.getpass("Please enter a new password: ")
+                conf_password = stdiomask.getpass("Repeat the password: ")
+                if new_password == conf_password:
+                    break
+                print("Passwords did not match, please try again.")
+
+            email = input("Email: ")
+            print("\nSecurity question 1:")
+            question1 = input("What is your mother's madien name? ").lower()
+            print("\nSecurity question 2:")
+            question2 = input("What city were you born? ").lower()
+            c.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}", "{email}", "{question1}", "{question2}")')
             print() # Empty print statment for spacing
-            print("Saving user name and password to the database.")
+            print("Saving user account information to the database.")
+
+        
         
         conn.commit()
         c.close()
