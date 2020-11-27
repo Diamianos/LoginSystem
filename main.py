@@ -85,13 +85,14 @@ def create_account():
 
         new_username = input("Please enter a new username: ").lower()
 
-        try:
+        try:  # trying to get the username in the database based on the user input
             C.execute(f'SELECT username FROM usernameAndPasswords WHERE username = "{new_username}"')
             test_username = C.fetchone() # Getting the results of the cursor and assigning it to a variable
             test_username = ''.join(test_username) # converting the results from a tuple to a string
             if new_username == test_username:
                 print("Username already exists, please login or choose forgot password.")
-        except TypeError:
+                
+        except TypeError: # except clause incase username is not found
             while True:
                 new_password = stdiomask.getpass("Please enter a new password: ")
                 conf_password = stdiomask.getpass("Repeat the password: ")
