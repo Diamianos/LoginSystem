@@ -188,6 +188,8 @@ def forgot_pwd():
     # If the user knows their username....
     if know_username == YES:
         uk_username = input("What is your username? ").lower()  # "Unknown user name" variable from input
+        if uk_username.upper() == QUIT:
+                close_program()
 
         # trying to get the username in the database based on the user input
         try:  
@@ -205,6 +207,8 @@ def forgot_pwd():
     # If the user DOES NOT know their username...
     elif know_username == NO:
         email = input("What is the email associated to this email? ")
+        if email.upper() == QUIT:
+                close_program()
 
         # Testing to see if the email is in the database.
         try:  
@@ -221,6 +225,7 @@ def forgot_pwd():
 
         except Exception:
             print ("Specified email was not found in the system.")
+            print("Please try again")
             close_program()
 
     # Getting the security questions and answers from the database
@@ -238,19 +243,37 @@ def forgot_pwd():
     answer2 = C.fetchone()
     answer2 = ''.join(answer2)
     
+    # Asking the security questions to the user and storing their answer in a variable to compare with
     user_answer1 = input(f"{question1} ").lower()
+    if user_answer1.upper() == QUIT:
+                close_program()
     user_answer2 = input(f"{question2} ").lower()   
+    if user_answer2.upper() == QUIT:
+                close_program()
 
     # If the user got the security questions correct
     if answer1 == user_answer1 and answer2 == user_answer2:
-        new_password = input("Please enter a new password: ")
-        conf_password = input("Confirm the new password: ")
+        new_password = stdiomask.getpass("Please enter a new password: ")
+        if new_password.upper() == QUIT:
+                close_program()
+
+        conf_password = stdiomask.getpass("Confirm the new password: ")
+        if conf_password.upper() == QUIT:
+                close_program()
+
+        # Keep prompting to enter password and confirmation until they are the same
         while new_password != conf_password:
             print("Passwords did not match.")
-            new_password = input("Please enter a new password: ")
-            conf_password = input("Confirm the new password: ")
+            new_password = stdiomask.getpass("Please enter a new password: ")
+            if new_password.upper() == QUIT:
+                close_program()
+            conf_password = stdiomask.getpass("Confirm the new password: ")
+            if conf_password.upper() == QUIT:
+                close_program()
+
+        # Update the username's password in the database.
         C.execute(f'UPDATE usernameAndPasswords SET password = "{new_password}" WHERE username = "{username}"')
-        print("Password has been updated!\n")
+        print("\nPassword has been updated!\n")
         CONN.commit()
 
     # If they did not get the security questions correct
@@ -265,6 +288,7 @@ def validateInput(value):
     else:
         return False
     # End of function
+    
     
 def close_program():
     C.close()
