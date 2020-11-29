@@ -165,6 +165,7 @@ def create_account():
             # Importing the data into the database
             C.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}", "{email}", "{question1}", "{answer1}", "{question2}", "{answer2}")')
             print() # Empty print statment for spacing
+            CONN.commit()
             print("Saving user account information to the database.\n")
             close_program()
 
