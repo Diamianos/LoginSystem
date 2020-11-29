@@ -1,4 +1,4 @@
-# Login system
+# Python Login system with SQL Lite
 
 # Tutorials
 # https://pythonprogramming.net/sql-database-python-part-1-inserting-database/
