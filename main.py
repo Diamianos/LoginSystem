@@ -61,7 +61,7 @@ def main():
 
         user_selection = int(user_selection) # Converting user_selection to an integer
         print()
-
+        
         # Acting program based on selection
         if user_selection == LOGIN:
             login()
@@ -71,14 +71,14 @@ def main():
             forgot_pwd()
         elif user_selection == DEL_ACT:
             del_act()
-
+    
     # Closing the connection to the database
     C.close()
     CONN.close()
 
 
 def login():
-
+        
         # Getting the user input
         username = input("Username: ").lower()
         if username.upper() == QUIT:
@@ -129,7 +129,7 @@ def create_account():
             if new_username == test_username:
                 print("Username already exists, please login or choose forgot password.\n")
                 close_program()
-
+                
         except TypeError: # except clause incase username is not found
             while True:
                 new_password = stdiomask.getpass("Please enter a new password: ")
@@ -161,11 +161,11 @@ def create_account():
             answer2 = input(question2 + ' ').lower()
             if answer2.upper() == QUIT:
                 close_program()
-
+            
             # Importing the data into the database
             C.execute(f'INSERT INTO usernameAndPasswords VALUES("{new_username}", "{new_password}", "{email}", "{question1}", "{answer1}", "{question2}", "{answer2}")')
-            print() # Empty print statment for spacing
             CONN.commit()
+            print() # Empty print statment for spacing
             print("Saving user account information to the database.\n")
             close_program()
 
@@ -187,13 +187,13 @@ def forgot_pwd():
             user_selection = str(input("Your selection: "))
             if user_selection.upper() == QUIT:
                 close_program()
-
+    
     # Converting input to an integer for the selection below
     know_username = int(know_username)
-
+    
     # Empty variable to hold the username based on the if / elif statements below
     username = ''
-
+    
     # If the user knows their username....
     if know_username == YES:
         print()
@@ -239,7 +239,7 @@ def forgot_pwd():
             print ("Specified email was not found in the system.")
             print("Please try again")
             close_program()
-
+    
 
     # Getting the security questions and answers from the database
     C.execute(f'SELECT question1 FROM usernameAndPasswords WHERE username = "{username}"') 
@@ -255,7 +255,7 @@ def forgot_pwd():
     C.execute(f'SELECT answer2 FROM usernameAndPasswords WHERE username = "{username}"') 
     answer2 = C.fetchone()
     answer2 = ''.join(answer2)
-
+    
     # Asking the security questions to the user and storing their answer in a variable to compare with
     user_answer1 = input(f"{question1} ").lower()
     if user_answer1.upper() == QUIT:
@@ -289,7 +289,7 @@ def forgot_pwd():
         CONN.commit()
         print("\nPassword has been updated!\n")
         close_program()
-
+        
 
     # If they did not get the security questions correct
     else: 
@@ -310,7 +310,7 @@ def del_act():
             user_selection = str(input("Your selection: "))
             if user_selection.upper() == QUIT:
                 close_program()
-
+    
     print()
     # Converting input to an integer for the selection below
     know_username = int(know_username)
@@ -341,7 +341,7 @@ def del_act():
             print ("Specified email was not found in the system.")
             print("Please try again")
             close_program()
-
+    
     elif know_username == YES:
         uk_username = input("What is your username? ").lower()  # "Unknown user name" variable from input
         if uk_username.upper() == QUIT:
@@ -406,7 +406,7 @@ def del_act():
                 del_act = str(input("Your selection: "))
                 if del_act.upper() == QUIT:
                     close_program()
-
+        
         # Converting input to an integer for the selection below
         del_act = int(del_act)   
 
@@ -418,7 +418,7 @@ def del_act():
             close_program()
         else:
             close_program()
-
+    
     else:
         print()
         print("Either the password or one of the security questions did not match, please try again.")
@@ -426,8 +426,8 @@ def del_act():
 
 
     print("")
-
-
+    
+    
 def validateInput(value):
 
     if value.isdigit() == True:
@@ -435,7 +435,7 @@ def validateInput(value):
     else:
         return False
     # End of function
-
+    
 
 def close_program():
     C.close()
@@ -444,4 +444,4 @@ def close_program():
 
 
 
-main() 
+main()
